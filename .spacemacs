@@ -46,7 +46,9 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(
+                                      load-dir
+                                      )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -250,6 +252,19 @@ in `dotspacemacs/user-config'."
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
+
+  ;;; Load local configuration from ~/.emacs.d-local
+  (let* ((emacs-d-local (concat user-home-directory (file-name-as-directory ".emacs.d-local")))
+         (emacs-d-local-snippets (concat emacs-d-local (file-name-as-directory "snippets"))))
+    (require 'load-dir)
+    (load-dir-one emacs-d-local)
+
+    (require 'yasnippet)
+    (add-to-list 'yas-snippet-dirs emacs-d-local-snippets)
+    (yas-reload-all)
+    (yas-global-mode 1)
+    )
+
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
